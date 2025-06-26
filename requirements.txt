@@ -1,0 +1,7 @@
+dotenv
+fastapi
+loguru
+pysaml2
+python-multipart
+uvicorn 
+xmlsec
