@@ -1,5 +1,5 @@
-from abc import ABC
-from loguru import logger
+from config import logger
+
 
 class IError(BaseException):
 

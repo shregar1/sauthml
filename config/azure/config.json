@@ -3,7 +3,7 @@
     "key_file": "",
     "cert_file": "security/sauthml.cer",
     "idp_metadata": "security/idp_metadata.xml",
-    "xmlsec_binary": "",
+    "xmlsec_binary": "/usr/bin/xmlsec1",
     "key_vault_url": "",
     "key_vault_key": ""
 }

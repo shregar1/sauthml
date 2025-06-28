@@ -7,7 +7,7 @@ from config import logger
 
 from controllers.callbacks.saml import CallbackSAMLController
 
-router = APIRouter(prefix="/callback/")
+router = APIRouter(prefix="/callback")
 
 logger.debug(f"Registering {CallbackSAMLController.__name__} route.")
 router.add_api_route(

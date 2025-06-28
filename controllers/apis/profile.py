@@ -23,7 +23,7 @@ class APISProfileController(IController):
         super().__init__(urn)
         self.api_name = APILK.PROFILE
 
-    async def post(
+    async def get(
         self,
         request: Request
     ):

@@ -26,7 +26,7 @@ class UserLogoutController(IController):
         super().__init__(urn)
         self.api_name = APILK.LOGOUT
 
-    async def post(
+    async def get(
         self,
         request: Request,
         saml_service: Saml2Client = Depends(get_saml_service)

@@ -23,7 +23,7 @@ class APISExampleController(IController):
         super().__init__(urn)
         self.api_name = APILK.EXAMPLE
 
-    async def post(
+    async def get(
         self,
         request: Request
     ):

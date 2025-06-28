@@ -1,7 +1,10 @@
+dataclasses_json
 dotenv
 fastapi
+itsdangerous
 loguru
 pysaml2
 python-multipart
-uvicorn 
+ulid
+uvicorn
 xmlsec

@@ -26,7 +26,7 @@ class UserLoginController(IController):
         super().__init__(urn)
         self.api_name = APILK.LOGIN
 
-    async def post(
+    async def get(
         self,
         request: Request,
         redirect_url: str,

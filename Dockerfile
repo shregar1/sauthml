@@ -21,15 +21,20 @@ RUN apt-get update && \
     gnupg && \
     rm -rf /var/lib/apt/lists/*
 
-RUN echo "Install Azure CLI, .NET SDK, and Python 3.11"
-RUN add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
+RUN echo "Install Python 3.11 and dependencies"
+RUN apt-get update && \
     apt-get install -y \
-    python3.11 \
-    python3.11-venv \
-    python3.11-dev \
-    python3-pip && \
-    xmlsec1 && \
+        software-properties-common \
+        python3.11 \
+        python3.11-venv \
+        python3.11-dev \
+        python3-pip \
+        xmlsec1 \
+        pkg-config \
+        libxml2-dev \
+        libxmlsec1-dev \
+        gcc && \
+    add-apt-repository ppa:deadsnakes/ppa && \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "Set alternatives for python3"
