@@ -1,4 +1,9 @@
-from fastapi import Request, Response
+import base64
+
+from http import HTTPStatus
+
+from fastapi import Request, Response, HTTPException
+from saml2 import BINDING_HTTP_POST
 from saml2.client import Saml2Client
 
 from abstractions.service import IService
@@ -18,5 +23,44 @@ class CallbackSAMLService(IService):
         self.user_urn = user_urn
         self.api_name = api_name
 
-    def run(self, request: Request, saml_service: Saml2Client) -> Response:
-        pass
+    async def run(
+        self,
+        request: Request,
+        saml_service: Saml2Client
+    ) -> Response:
+
+        form_data = await request.form()
+        saml_response_data = form_data.get("SAMLResponse")
+
+        if not saml_response_data:
+            raise HTTPException(
+                status_code=HTTPStatus.BAD_REQUEST, 
+                detail="SAML Response not found"
+            )
+
+        # Process SAML response
+        authn_response = saml_service.parse_authn_request_response(
+            saml_response_data, BINDING_HTTP_POST
+        )
+        # Extract user attributes
+        user_attributes = authn_response.ava  
+        user_name_id = str(authn_response.name_id)
+
+        # Store user info in session (using Starlette session middleware)
+        request.session["saml_attributes"] = user_attributes
+        request.session["saml_name_id"] = user_name_id
+        request.session["user_info"] = {
+            "name": user_attributes.get("displayName", ["Unknown"])[0],
+            "email": user_attributes.get("mail", ["Unknown"])[0],
+        }
+
+        if form_data.get("RelayState"):
+            return_path = base64.b64decode(
+                s=form_data.get("RelayState")
+            ).decode("utf-8")
+            return {
+                "return_path": return_path
+            }
+        return {
+                "/api/user-info": return_path
+        }

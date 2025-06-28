@@ -1,5 +1,5 @@
 from fastapi import Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from http import HTTPStatus
 
 from abstractions.controller import IController
@@ -12,16 +12,16 @@ from dtos.responses.base import BaseResponseDTO
 from errors.bad_input_error import BadInputError
 from errors.unexpected_response_error import UnexpectedResponseError
 
-from services.apis.example import APISExampleService
+from services.apis.profile import APISProfileService
 
 from utilities.dictionary import DictionaryUtility
 
 
-class APISExampleController(IController):
+class APISProfileController(IController):
 
     def __init__(self, urn: str = None) -> None:
         super().__init__(urn)
-        self.api_name = APILK.EXAMPLE
+        self.api_name = APILK.PROFILE
 
     async def post(
         self,
@@ -43,6 +43,9 @@ class APISExampleController(IController):
 
             self.logger.debug("Validating request")
             self.request_payload = {}
+            self.request_payload.update({
+                "user_id": self.user_id
+            })
 
             await self.validate_request(
                 request_payload=self.request_payload,
@@ -50,8 +53,8 @@ class APISExampleController(IController):
             )
             self.logger.debug("Verified request")
 
-            self.logger.debug("Running example service")
-            response_dto: BaseResponseDTO = await APISExampleService(
+            self.logger.debug("Running profile service")
+            response_dto: BaseResponseDTO = await APISProfileService(
                 urn=self.urn,
                 user_urn=self.user_urn,
                 api_name=self.api_name
@@ -60,13 +63,19 @@ class APISExampleController(IController):
             )
 
             self.logger.debug("Preparing response metadata")
-            http_status_code = HTTPStatus.OK
+            http_status_code = HTTPStatus.PERMANENT_REDIRECT
             self.logger.debug("Prepared response metadata")
+
+            response_payload: dict = response_dto.to_dict()
+            return RedirectResponse(
+                url=response_payload.get("url"),
+                headers=response_payload.get("headers")
+            )
 
         except (BadInputError, UnexpectedResponseError) as err:
 
             self.logger.error(
-                f"{err.__class__} error occured while fetching example: {err}"
+                f"{err.__class__} error occured while fetching profile: {err}"
             )
             self.logger.debug("Preparing response metadata")
             response_dto: BaseResponseDTO = BaseResponseDTO(
@@ -83,14 +92,14 @@ class APISExampleController(IController):
         except Exception as err:
 
             self.logger.error(
-                f"{err.__class__} error occured while fetching example: {err}"
+                f"{err.__class__} error occured while fetching profile: {err}"
             )
 
             self.logger.debug("Preparing response metadata")
             response_dto: BaseResponseDTO = BaseResponseDTO(
                 transactionUrn=self.urn,
                 status=APIStatus.FAILED,
-                responseMessage="Failed to fetch example.",
+                responseMessage="Failed to fetch user profile.",
                 responseKey="error_internal_server_error",
                 data={},
                 error={}

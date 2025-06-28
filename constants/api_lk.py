@@ -5,7 +5,10 @@ class APILK:
 
     # A
     # B
+
     # C
+    CALLBACK_SAML: Final[str] = "CALLBACK_SAML"
+
     # D
 
     # E
@@ -26,6 +29,8 @@ class APILK:
     # N
     # O
     # P
+    PROFILE: Final[str] = "PROFILE"
+    EXAMPLE: Final[str] = "EXAMPLE"
     # Q
     # R
     # S

@@ -59,7 +59,7 @@ class UserLoginController(IController):
             )
             self.logger.debug("Verified request")
 
-            self.logger.debug("Running online user service")
+            self.logger.debug("Running login service")
             response_dto: BaseResponseDTO = await UserLoginService(
                 urn=self.urn,
                 user_urn=self.user_urn,

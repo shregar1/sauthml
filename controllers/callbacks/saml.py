@@ -15,7 +15,7 @@ from dtos.responses.base import BaseResponseDTO
 from errors.bad_input_error import BadInputError
 from errors.unexpected_response_error import UnexpectedResponseError
 
-from services.user.login import UserLoginService
+from services.callbacks.saml import CallbackSAMLService
 
 from utilities.dictionary import DictionaryUtility
 
@@ -24,7 +24,7 @@ class CallbackSAMLController(IController):
 
     def __init__(self, urn: str = None) -> None:
         super().__init__(urn)
-        self.api_name = APILK.LOGIN
+        self.api_name = APILK.CALLBACK_SAML
 
     async def post(
         self,
@@ -57,8 +57,8 @@ class CallbackSAMLController(IController):
             )
             self.logger.debug("Verified request")
 
-            self.logger.debug("Running online user service")
-            response_dto: BaseResponseDTO = await UserLoginService(
+            self.logger.debug("Running saml callback service")
+            response_dto: BaseResponseDTO = await CallbackSAMLService(
                 urn=self.urn,
                 user_urn=self.user_urn,
                 api_name=self.api_name

@@ -1,8 +1,8 @@
 {
-    "entityid": "",
+    "entityid": "http://localhost:8000/sp.xml",
     "key_file": "",
-    "cert_file": "",
-    "idp_metadata": "",
+    "cert_file": "security/sauthml.cer",
+    "idp_metadata": "security/idp_metadata.xml",
     "xmlsec_binary": "",
     "key_vault_url": "",
     "key_vault_key": ""

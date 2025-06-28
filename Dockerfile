@@ -29,6 +29,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa && \
     python3.11-venv \
     python3.11-dev \
     python3-pip && \
+    xmlsec1 && \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "Set alternatives for python3"
@@ -40,6 +41,9 @@ RUN python3 -m pip install --no-cache-dir --upgrade pip
 RUN echo "Copy the requirements.txt first to leverage Docker layer caching"
 COPY requirements.txt /app/requirements.txt
 
+RUN echo "Install Python dependencies"
+RUN pip3 install --no-cache-dir -r /app/requirements.txt
+
 RUN echo "Set the working directory"
 WORKDIR /app
 
@@ -47,7 +51,7 @@ RUN echo "Copy the FastAPI application code to the container"
 COPY . /app
 
 RUN echo "Expose port"
-EXPOSE 8007
+EXPOSE 8000
 
 RUN echo "Run the FastAPI app with Uvicorn"
 CMD ["python3", "app.py"]
