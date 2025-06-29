@@ -8,6 +8,8 @@ from saml2.client import Saml2Client
 
 from abstractions.service import IService
 
+from constants.api_status import APIStatus
+
 from dtos.responses.base import BaseResponseDTO
 
 
@@ -36,7 +38,7 @@ class CallbackSAMLService(IService):
 
         if not saml_response_data:
             raise HTTPException(
-                status_code=HTTPStatus.BAD_REQUEST, 
+                status_code=HTTPStatus.BAD_REQUEST,
                 detail="SAML Response not found"
             )
 
@@ -46,18 +48,8 @@ class CallbackSAMLService(IService):
         )
         # Extract user attributes
         user_attributes = authn_response.ava
-        
-        # Handle name_id properly - convert to string for JSON serialization
-        try:
-            if hasattr(authn_response.name_id, 'text'):
-                user_name_id = str(authn_response.name_id.text)
-            else:
-                # Fallback to string conversion
-                user_name_id = str(authn_response.name_id)
-        except Exception as e:
-            self.logger.error(f"Error processing name_id: {e}")
-            # Use a safe fallback
-            user_name_id = str(authn_response.name_id)
+        # Convert to string for JSON serialization
+        user_name_id = str(authn_response.name_id.text)
 
         # Store user info in session (using Starlette session middleware)
         request.session["saml_attributes"] = user_attributes
@@ -76,7 +68,7 @@ class CallbackSAMLService(IService):
 
         return BaseResponseDTO(
             transactionUrn=self.urn,
-            status=HTTPStatus.OK,
+            status=APIStatus.SUCCESS,
             responseMessage="User login successful",
             responseKey="success_user_login",
             data={
