@@ -75,4 +75,4 @@ logger.info("Initialised routers")
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=HOST, port=PORT)
+    uvicorn.run("app:app", host=HOST, port=PORT, reload=True)

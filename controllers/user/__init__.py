@@ -14,7 +14,7 @@ logger.debug(f"Registering {UserLoginController.__name__} route.")
 router.add_api_route(
     path="/login",
     endpoint=UserLoginController().get,
-    methods=[HTTPMethod.POST.value],
+    methods=[HTTPMethod.GET.value],
     name=APILK.EXAMPLE
 )
 logger.debug(f"Registered {UserLoginController.__name__} route.")
@@ -23,7 +23,7 @@ logger.debug(f"Registering {UserLogoutController.__name__} route.")
 router.add_api_route(
     path="/logout",
     endpoint=UserLogoutController().get,
-    methods=[HTTPMethod.POST.value],
+    methods=[HTTPMethod.GET.value],
     name=APILK.EXAMPLE
 )
 logger.debug(f"Registered {UserLogoutController.__name__} route.")

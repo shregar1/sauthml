@@ -1,6 +1,11 @@
 from fastapi import Request, Response, HTTPException
+from http import HTTPStatus
 
 from abstractions.service import IService
+
+from constants.api_status import APIStatus
+
+from dtos.responses.base import BaseResponseDTO
 
 
 class APISExampleService(IService):
@@ -24,10 +29,18 @@ class APISExampleService(IService):
 
         if not request.session.get("saml_name_id"):
             raise HTTPException(
-                status_code=401,
+                status_code=HTTPStatus.unprocessable_ENTITY,
                 detail="Unauthorized: Please log in"
             )
 
-        return {
-            "message": "This is a protected endpoint"
-        }
+        return BaseResponseDTO(
+            transactionUrn=self.urn,
+            status=APIStatus.SUCCESS,
+            responseMessage="Successfully fetched example",
+            responseKey="success_fetch_example",
+            data={
+                "message": "This is a protected endpoint"
+            },
+            error={}
+        )
+

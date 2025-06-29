@@ -1,4 +1,4 @@
-from fastapi import Request
+from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
 
@@ -78,6 +78,23 @@ class APISExampleController(IController):
                 error={}
             )
             http_status_code = err.http_status_code
+            self.logger.debug("Prepared response metadata")
+
+        except HTTPException as err:
+
+            self.logger.error(
+                f"{err.__class__} error occured while fetching profile: {err}"
+            )
+            self.logger.debug("Preparing response metadata")
+            response_dto: BaseResponseDTO = BaseResponseDTO(
+                transactionUrn=self.urn,
+                status=APIStatus.FAILED,
+                responseMessage=err.detail,
+                responseKey="error_unprocessable_entity",
+                data={},
+                error={}
+            )
+            http_status_code = err.status_code
             self.logger.debug("Prepared response metadata")
 
         except Exception as err:

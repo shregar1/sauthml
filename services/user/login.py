@@ -1,8 +1,12 @@
 from fastapi import Request, Response, HTTPException
+from http import HTTPStatus
 from saml2.client import Saml2Client
-from starlette.status import HTTP_400_BAD_REQUEST
 
 from abstractions.service import IService
+
+from constants.api_status import APIStatus
+
+from dtos.responses.base import BaseResponseDTO
 
 
 class UserLoginService(IService):
@@ -19,7 +23,7 @@ class UserLoginService(IService):
         self.user_urn = user_urn
         self.api_name = api_name
 
-    def run(
+    async def run(
         self,
         request: Request,
         saml_service: Saml2Client,
@@ -37,12 +41,19 @@ class UserLoginService(IService):
                 "Pragma": "no-cache"
             }
 
-            return {
-                "url": authn_request_url,
-                "headers": headers
-            }
+            return BaseResponseDTO(
+                transactionUrn=self.urn,
+                status=APIStatus.SUCCESS,
+                responseMessage="User login successful",
+                responseKey="success_user_login",
+                data={
+                    "url": authn_request_url,
+                    "headers": headers
+                },
+                error={}
+            )
 
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
+            status_code=HTTPStatus.BAD_REQUEST,
             detail="Unable to initiate login"
         )

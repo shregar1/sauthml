@@ -3,6 +3,10 @@ from http import HTTPStatus
 
 from abstractions.service import IService
 
+from constants.api_status import APIStatus
+
+from dtos.responses.base import BaseResponseDTO
+
 
 class APISProfileService(IService):
 
@@ -30,4 +34,11 @@ class APISProfileService(IService):
                 detail="User not logged in"
             )
 
-        return user_info
+        return BaseResponseDTO(
+            transactionUrn=self.urn,
+            status=APIStatus.SUCCESS,
+            responseMessage="User login successful",
+            responseKey="success_user_login",
+            data=user_info,
+            error={}
+        )

@@ -27,13 +27,13 @@ class SAMLUtility(IUtility):
                     "endpoints": {
                         "assertion_consumer_service": [
                             (
-                                "http://localhost:8000/api/saml/callback",
+                                "http://localhost:8000/callback/saml",
                                 BINDING_HTTP_POST
                             ),
                         ],
                         "single_logout_service": [
                             (
-                                "http://localhost:8000/api/saml/logout",
+                                "http://localhost:8000/user/logout",
                                 BINDING_HTTP_REDIRECT
                             ),
                         ],
